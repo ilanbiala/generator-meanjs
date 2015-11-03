@@ -8,7 +8,7 @@ var Promise = require('bluebird'),
 var exec = function (cmd) {
   return new Promise(function (resolve, reject) {
     child_process.exec(cmd, function (err, res) {
-      if(err) {
+      if (err) {
         reject(err);
       } else {
         resolve(res);
@@ -207,7 +207,7 @@ module.exports = generators.Base.extend({
   removeChatExample: function () {
     var done = this.async();
 
-    if(!this.addChatExample) {
+    if (!this.addChatExample) {
       exec('rm -rf ' + folderPath + 'modules/chat')
         .then(function () {
           done();
@@ -224,7 +224,7 @@ module.exports = generators.Base.extend({
   removeArticlesExample: function () {
     var done = this.async();
 
-    if(!this.addArticleExample) {
+    if (!this.addArticleExample) {
       exec('rm -rf ' + folderPath + 'modules/articles')
         .then(function () {
           done();
