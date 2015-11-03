@@ -1,6 +1,5 @@
 var Promise = require('bluebird'),
   child_process = require('child_process'),
-  fs = require('fs'),
   path = require('path'),
   s = require('underscore.string'),
   generators = require('yeoman-generator'),
@@ -175,55 +174,34 @@ module.exports = generators.Base.extend({
   },
 
   replacePackageConfigs: function () {
-    var done = this.async();
-
-    var packageJson = JSON.parse(fs.readFileSync(folderPath + 'package.json'));
+    var packageJson = this.fs.readJSON(folderPath + 'package.json');
     packageJson.name = this.slugifiedAppName;
     packageJson.description = this.appDescription;
     packageJson.author = this.appAuthor;
-
-    fs.writeFile(folderPath + 'package.json', JSON.stringify(packageJson, null, 2), function (err) {
-      if(err) {
-        return log.red(err);
-      }
-      done();
-    });
+    
+    this.fs.writeJSON(folderPath + 'package.json', packageJson);
   },
 
   replaceBowerConfigs: function () {
-    var done = this.async();
-
-    var bowerJson = JSON.parse(fs.readFileSync(folderPath + 'bower.json'));
+    var bowerJson = this.fs.readJSON(folderPath + 'bower.json');
     bowerJson.name = this.slugifiedAppName;
     bowerJson.description = this.appDescription;
 
-    fs.writeFile(folderPath + 'bower.json', JSON.stringify(bowerJson, null, 2), function (err) {
-      if (err) {
-        return log.red(err);
-      }
-      done();
-    });
+    this.fs.writeJSON(folderPath + 'bower.json', bowerJson);
   },
 
   replaceConfigConfigs: function () {
-    var done = this.async();
-
     var titleRegex = /title: 'MEAN.JS'/g;
     var descriptionRegex = /description: 'Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js'/g;
     var keywordsRegex = /keywords: 'mongodb, express, angularjs, node.js, mongoose, passport'/g;
 
-    var configFile = (fs.readFileSync(folderPath + 'config/env/default.js')).toString();
+    var configFile = (this.fs.read(folderPath + 'config/env/default.js')).toString();
 
     configFile.replace(titleRegex, 'title: \'' + this.slugifiedAppName + '\'');
     configFile.replace(descriptionRegex, 'description: \'' + this.appDescription + '\'');
     configFile.replace(keywordsRegex, 'keywords: \'' + this.appKeywords + '\'');
 
-    fs.writeFile(folderPath + 'config/env/default.js', configFile, function (err) {
-      if(err) {
-        return log.red(err);
-      }
-      done();
-    });
+    this.fs.write(folderPath + 'config/env/default.js', configFile);
   },
 
   removeChatExample: function () {
